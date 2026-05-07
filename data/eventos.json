@@ -1,0 +1,152 @@
+[
+  {
+    "id": "1",
+    "nombre": "Bar El Español",
+    "ubicacion": "Calle 25 de Mayo 453, San Miguel de Tucumán",
+    "categoria": "bar",
+    "fuente": "manual",
+    "fechaObtencion": "2025-05-06",
+    "activo": true,
+    "descripcion": "Hermoso lugar para compartir en familia, excelente atención"
+  },
+  {
+    "id": "2",
+    "nombre": "Peña El Cardón",
+    "ubicacion": "Av. Sarmiento 1120, San Miguel de Tucumán",
+    "categoria": "peña",
+    "fuente": "mock",
+    "fechaObtencion": "2025-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "3",
+    "nombre": "Café del Ángel",
+    "ubicacion": "Laprida 290, San Miguel de Tucumán",
+    "categoria": "cafe",
+    "fuente": "mock",
+    "fechaObtencion": "2025-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "4",
+    "nombre": "Boliche Mandarine",
+    "ubicacion": "Av. Roca 850, San Miguel de Tucumán",
+    "categoria": "boliche",
+    "fuente": "mock",
+    "fechaObtencion": "2025-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "5",
+    "nombre": "La Cantina del Norte",
+    "ubicacion": "Congreso 340, San Miguel de Tucumán",
+    "categoria": "restaurante",
+    "fuente": "mock",
+    "fechaObtencion": "2025-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "6",
+    "nombre": "Recital Folklore en Plaza Independencia",
+    "ubicacion": "Plaza Independencia, San Miguel de Tucumán",
+    "categoria": "recital",
+    "fuente": "mock",
+    "fechaObtencion": "2025-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "7",
+    "nombre": "Bar Irlandés O'Brien",
+    "ubicacion": "Muñecas 560, San Miguel de Tucumán",
+    "categoria": "bar",
+    "fuente": "mock",
+    "fechaObtencion": "2025-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "8",
+    "nombre": "Festival de Jazz Tucumán",
+    "ubicacion": "Teatro San Martín, Tucumán",
+    "categoria": "recital",
+    "fuente": "mock",
+    "fechaObtencion": "2025-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "9",
+    "nombre": "Cervecería La Rubia",
+    "ubicacion": "Av. Mate de Luna 2210, San Miguel de Tucumán",
+    "categoria": "bar",
+    "fuente": "mock",
+    "fechaObtencion": "2025-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "10",
+    "nombre": "El Patio Cultural",
+    "ubicacion": "Mendoza 790, San Miguel de Tucumán",
+    "categoria": "cafe",
+    "fuente": "mock",
+    "fechaObtencion": "2025-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "1778094411705488",
+    "nombre": "La Yapa Bar",
+    "ubicacion": "Crisóstomo Álvarez 502, Tucumán",
+    "categoria": "bar",
+    "fuente": "excel",
+    "fechaObtencion": "2026-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "1778094411705611",
+    "nombre": "Café del Centro",
+    "ubicacion": "San Martín 678, Tucumán",
+    "categoria": "cafe",
+    "fuente": "excel",
+    "fechaObtencion": "2026-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "1778094411706810",
+    "nombre": "Pacha Tucumán",
+    "ubicacion": "Av. Belgrano 1800, Tucumán",
+    "categoria": "boliche",
+    "fuente": "excel",
+    "fechaObtencion": "2026-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "1778094411707855",
+    "nombre": "Feria Artesanal del Parque",
+    "ubicacion": "Parque 9 de Julio, Tucumán",
+    "categoria": "evento",
+    "fuente": "excel",
+    "fechaObtencion": "2026-05-06",
+    "activo": true,
+    "descripcion": ""
+  },
+  {
+    "id": "e8ea11e6-a53d-4367-999f-c621b6548c31",
+    "nombre": "Bar Prueba Sofia",
+    "ubicacion": "Tucumán 123",
+    "categoria": "bar",
+    "fuente": "manual",
+    "fechaObtencion": "2026-05-06",
+    "activo": true,
+    "descripcion": ""
+  }
+]

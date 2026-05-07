@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tucumán Eventos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --surface2: #1f1f1f;
+      --border: #2a2a2a;
+      --accent: #e8c547;
+      --accent2: #e05c2a;
+      --text: #f0ece0;
+      --muted: #7a7a6e;
+      --danger: #e05c2a;
+      --success: #5cb87a;
+      --radius: 4px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding: 28px 40px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .logo span { color: var(--text); }
+
+    .header-stats {
+      display: flex;
+      gap: 32px;
+    }
+    .stat {
+      text-align: right;
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── LAYOUT ── */
+    .main {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 73px);
+    }
+
+    /* ── SIDEBAR ── */
+    aside {
+      border-right: 1px solid var(--border);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .section-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+    .section-title:first-child { margin-top: 0; }
+
+    .filter-btn {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      text-align: left;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .filter-btn:hover { background: var(--surface2); border-color: var(--border); }
+    .filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 500; }
+
+    .cat-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .add-btn {
+      margin-top: auto;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      transition: opacity 0.15s;
+      width: 100%;
+    }
+    .add-btn:hover { opacity: 0.85; }
+
+    .ia-btn {
+      background: var(--surface2);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 10px 16px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      transition: all 0.15s;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .ia-btn:hover { background: var(--accent); color: #000; }
+    .ia-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── CONTENT ── */
+    .content {
+      padding: 32px 40px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      align-items: center;
+    }
+
+    .search-wrap {
+      flex: 1;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px 10px 36px;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-wrap input:focus { border-color: var(--accent); }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ── CARDS GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.15s, transform 0.15s;
+      animation: fadeIn 0.3s ease both;
+    }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .card-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.06em;
+      line-height: 1.1;
+      flex: 1;
+    }
+
+    .badge {
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1px solid;
+      flex-shrink: 0;
+      font-weight: 500;
+    }
+
+    .card-location {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-desc {
+      font-size: 0.82rem;
+      color: #a0a090;
+      line-height: 1.5;
+      font-style: italic;
+      border-left: 2px solid var(--border);
+      padding-left: 10px;
+    }
+    .card-desc.empty { color: var(--muted); font-style: normal; }
+
+    .card-meta {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-sm {
+      flex: 1;
+      padding: 7px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-sm:hover { background: var(--surface2); }
+    .btn-sm.edit:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-sm.delete:hover { border-color: var(--danger); color: var(--danger); }
+    .btn-sm.ia:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+    }
+    .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty-text { font-size: 0.9rem; }
+
+    /* ── MODAL ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 32px;
+      width: 100%;
+      max-width: 480px;
+      transform: translateY(16px);
+      transition: transform 0.2s;
+    }
+    .overlay.open .modal { transform: translateY(0); }
+
+    .modal-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 24px;
+      color: var(--accent);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input[type="text"], select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    select option { background: var(--surface); }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .btn-primary {
+      flex: 1;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 11px;
+      border-radius: var(--radius);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-cancel {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 11px 20px;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-cancel:hover { border-color: var(--text); color: var(--text); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 14px 20px;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      z-index: 999;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.25s;
+      max-width: 320px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { border-left-color: var(--danger); }
+    .toast.success { border-left-color: var(--success); }
+
+    /* ── LOADING ── */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px;
+      color: var(--muted);
+      grid-column: 1/-1;
+    }
+    .spinner {
+      width: 24px; height: 24px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── LOGS PANEL ── */
+    .logs-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-top: 32px;
+    }
+    .logs-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .log-item {
+      display: flex;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.78rem;
+    }
+    .log-item:last-child { border-bottom: none; }
+    .log-time { color: var(--muted); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    .log-action { color: var(--accent); font-weight: 500; flex-shrink: 0; }
+    .log-detail { color: #a0a090; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Tucumán<span>Eventos</span></div>
+  <div class="header-stats">
+    <div class="stat">
+      <div class="stat-num" id="total-count">—</div>
+      <div class="stat-label">Total</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="cat-count">—</div>
+      <div class="stat-label">Categorías</div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+  <aside>
+    <div class="section-title">Filtrar</div>
+    <button class="filter-btn active" data-cat="all" onclick="setFilter('all', this)">
+      <span class="cat-dot" style="background:#e8c547"></span> Todos
+    </button>
+    <button class="filter-btn" data-cat="bar" onclick="setFilter('bar', this)">
+      <span class="cat-dot" style="background:#e05c2a"></span> Bar
+    </button>
+    <button class="filter-btn" data-cat="boliche" onclick="setFilter('boliche', this)">
+      <span class="cat-dot" style="background:#7b5ea7"></span> Boliche
+    </button>
+    <button class="filter-btn" data-cat="cafe" onclick="setFilter('cafe', this)">
+      <span class="cat-dot" style="background:#5cb87a"></span> Café
+    </button>
+    <button class="filter-btn" data-cat="peña" onclick="setFilter('peña', this)">
+      <span class="cat-dot" style="background:#e8844a"></span> Peña
+    </button>
+    <button class="filter-btn" data-cat="recital" onclick="setFilter('recital', this)">
+      <span class="cat-dot" style="background:#4a9ee8"></span> Recital
+    </button>
+    <button class="filter-btn" data-cat="restaurante" onclick="setFilter('restaurante', this)">
+      <span class="cat-dot" style="background:#e84a7b"></span> Restaurante
+    </button>
+    <button class="filter-btn" data-cat="evento" onclick="setFilter('evento', this)">
+      <span class="cat-dot" style="background:#a0c840"></span> Evento
+    </button>
+
+    <div class="section-title">Acciones</div>
+    <button class="add-btn" onclick="openModal()">+ Nuevo Evento</button>
+    <button class="ia-btn" id="ia-btn" onclick="generarDescripciones()">✦ Generar descripciones con IA</button>
+  </aside>
+
+  <div class="content">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="search" placeholder="Buscar por nombre..." oninput="renderCards()" />
+      </div>
+    </div>
+
+    <div class="grid" id="grid">
+      <div class="loading"><div class="spinner"></div> Cargando eventos...</div>
+    </div>
+
+    <div class="logs-panel" id="logs-panel" style="display:none">
+      <div class="logs-title">▸ Historial de acciones</div>
+      <div id="logs-list"></div>
+    </div>
+
+    <button onclick="toggleLogs()" style="
+      margin-top:16px; background:none; border:none; color:var(--muted);
+      font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
+      cursor:pointer; text-decoration:underline;
+    ">Ver historial de logs</button>
+  </div>
+</div>
+
+<!-- Modal agregar/editar -->
+<div class="overlay" id="overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Nuevo Evento</div>
+    <div class="form-group">
+      <label>Nombre *</label>
+      <input type="text" id="f-nombre" placeholder="Ej: Bar La Esquina" />
+    </div>
+    <div class="form-group">
+      <label>Ubicación *</label>
+      <input type="text" id="f-ubicacion" placeholder="Ej: Córdoba 450, Tucumán" />
+    </div>
+    <div class="form-group">
+      <label>Categoría *</label>
+      <select id="f-categoria">
+        <option value="bar">Bar</option>
+        <option value="boliche">Boliche</option>
+        <option value="cafe">Café</option>
+        <option value="peña">Peña</option>
+        <option value="recital">Recital</option>
+        <option value="restaurante">Restaurante</option>
+        <option value="evento">Evento</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Descripción (opcional)</label>
+      <textarea id="f-descripcion" placeholder="Descripción del lugar..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-primary" onclick="guardarEvento()">GUARDAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'http://localhost:3000';
+  const HEADERS = { 'Content-Type': 'application/json', 'User-Agent': 'TucumanEventosFrontend/1.0' };
+
+  let allEventos = [];
+  let currentFilter = 'all';
+  let editingId = null;
+
+  const COLORS = {
+    bar: '#e05c2a', boliche: '#7b5ea7', cafe: '#5cb87a',
+    peña: '#e8844a', recital: '#4a9ee8', restaurante: '#e84a7b',
+    evento: '#a0c840', 'sin categoría': '#7a7a6e'
+  };
+
+  // ── FETCH ──────────────────────────────────────────────────────────────────
+  async function cargarEventos() {
+    try {
+      const r = await fetch(`${API}/eventos`, { headers: { 'User-Agent': 'TucumanEventosFrontend/1.0' } });
+      const data = await r.json();
+      allEventos = data.datos || [];
+      renderStats();
+      renderCards();
+    } catch (e) {
+      document.getElementById('grid').innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">⚠</div>
+          <div class="empty-text">No se pudo conectar con la API.<br>Asegurate de que el servidor esté corriendo en localhost:3000</div>
+        </div>`;
+    }
+  }
+
+  function renderStats() {
+    document.getElementById('total-count').textContent = allEventos.length;
+    const cats = new Set(allEventos.map(e => e.categoria)).size;
+    document.getElementById('cat-count').textContent = cats;
+  }
+
+  function renderCards() {
+    const search = document.getElementById('search').value.toLowerCase();
+    let lista = allEventos;
+
+    if (currentFilter !== 'all') lista = lista.filter(e => e.categoria === currentFilter);
+    if (search) lista = lista.filter(e => e.nombre.toLowerCase().includes(search));
+
+    const grid = document.getElementById('grid');
+
+    if (lista.length === 0) {
+      grid.innerHTML = `<div class="empty"><div class="empty-icon">◎</div><div class="empty-text">No hay eventos para mostrar.</div></div>`;
+      return;
+    }
+
+    grid.innerHTML = lista.map((e, i) => {
+      const color = COLORS[e.categoria] || '#7a7a6e';
+      const desc = e.descripcion
+        ? `<div class="card-desc">${e.descripcion}</div>`
+        : `<div class="card-desc empty">Sin descripción — usá IA para generar una</div>`;
+      return `
+        <div class="card" style="animation-delay:${i * 0.04}s">
+          <div class="card-header">
+            <div class="card-name">${e.nombre}</div>
+            <span class="badge" style="color:${color};border-color:${color}">${e.categoria}</span>
+          </div>
+          <div class="card-location">📍 ${e.ubicacion}</div>
+          ${desc}
+          <div class="card-meta">Fuente: ${e.fuente} · ${e.fechaObtencion}</div>
+          <div class="card-actions">
+            <button class="btn-sm edit" onclick="openEditModal('${e.id}')">✎ Editar</button>
+            <button class="btn-sm ia" onclick="describirUno('${e.id}')">✦ IA</button>
+            <button class="btn-sm delete" onclick="eliminarEvento('${e.id}', '${e.nombre.replace(/'/g,"\\'")}')">✕ Eliminar</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function setFilter(cat, btn) {
+    currentFilter = cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCards();
+  }
+
+  // ── MODAL ──────────────────────────────────────────────────────────────────
+  function openModal() {
+    editingId = null;
+    document.getElementById('modal-title').textContent = 'Nuevo Evento';
+    document.getElementById('f-nombre').value = '';
+    document.getElementById('f-ubicacion').value = '';
+    document.getElementById('f-categoria').value = 'bar';
+    document.getElementById('f-descripcion').value = '';
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function openEditModal(id) {
+    const e = allEventos.find(x => x.id === id);
+    if (!e) return;
+    editingId = id;
+    document.getElementById('modal-title').textContent = 'Editar Evento';
+    document.getElementById('f-nombre').value = e.nombre;
+    document.getElementById('f-ubicacion').value = e.ubicacion;
+    document.getElementById('f-categoria').value = e.categoria;
+    document.getElementById('f-descripcion').value = e.descripcion || '';
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('overlay')) closeModal();
+  }
+
+  // ── CRUD ───────────────────────────────────────────────────────────────────
+  async function guardarEvento() {
+    const nombre = document.getElementById('f-nombre').value.trim();
+    const ubicacion = document.getElementById('f-ubicacion').value.trim();
+    const categoria = document.getElementById('f-categoria').value;
+    const descripcion = document.getElementById('f-descripcion').value.trim();
+
+    if (!nombre || !ubicacion) { showToast('Completá nombre y ubicación', 'error'); return; }
+
+    try {
+      const url = editingId ? `${API}/eventos/${editingId}` : `${API}/eventos`;
+      const method = editingId ? 'PUT' : 'POST';
+      const r = await fetch(url, {
+        method, headers: HEADERS,
+        body: JSON.stringify({ nombre, ubicacion, categoria, descripcion, fuente: 'manual' })
+      });
+      const data = await r.json();
+
+      if (!r.ok) { showToast(data.error || 'Error al guardar', 'error'); return; }
+
+      showToast(editingId ? 'Evento actualizado ✓' : 'Evento creado ✓', 'success');
+      closeModal();
+      cargarEventos();
+    } catch (e) {
+      showToast('Error de conexión', 'error');
+    }
+  }
+
+  async function eliminarEvento(id, nombre) {
+    if (!confirm(`¿Desactivar "${nombre}"?`)) return;
+    try {
+      const r = await fetch(`${API}/eventos/${id}`, {
+        method: 'DELETE', headers: { 'User-Agent': 'TucumanEventosFrontend/1.0' }
+      });
+      if (!r.ok) { showToast('Error al eliminar', 'error'); return; }
+      showToast('Evento desactivado ✓', 'success');
+      cargarEventos();
+    } catch (e) {
+      showToast('Error de conexión', 'error');
+    }
+  }
+
+  // ── IA ─────────────────────────────────────────────────────────────────────
+  async function describirUno(id) {
+    showToast('Generando descripción con IA...', '');
+    try {
+      const r = await fetch(`${API}/ia/describir/${id}`, {
+        method: 'POST', headers: { 'User-Agent': 'TucumanEventosFrontend/1.0' }
+      });
+      const data = await r.json();
+      if (!r.ok) { showToast(data.error || 'Error en IA', 'error'); return; }
+      showToast('Descripción generada ✓', 'success');
+      cargarEventos();
+    } catch (e) {
+      showToast('Error de conexión', 'error');
+    }
+  }
+
+  async function generarDescripciones() {
+    const btn = document.getElementById('ia-btn');
+    btn.disabled = true;
+    btn.textContent = '⟳ Generando...';
+    showToast('Generando todas las descripciones, puede tardar un momento...', '');
+    try {
+      const r = await fetch(`${API}/ia/describir-todos`, {
+        method: 'POST', headers: { 'User-Agent': 'TucumanEventosFrontend/1.0' }
+      });
+      const data = await r.json();
+      showToast(data.mensaje || 'Listo', 'success');
+      cargarEventos();
+    } catch (e) {
+      showToast('Error de conexión', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '✦ Generar descripciones con IA';
+    }
+  }
+
+  // ── LOGS ───────────────────────────────────────────────────────────────────
+  let logsVisible = false;
+  async function toggleLogs() {
+    logsVisible = !logsVisible;
+    const panel = document.getElementById('logs-panel');
+    if (!logsVisible) { panel.style.display = 'none'; return; }
+    panel.style.display = 'block';
+    try {
+      const r = await fetch(`${API}/eventos/logs/historial`, {
+        headers: { 'User-Agent': 'TucumanEventosFrontend/1.0' }
+      });
+      const data = await r.json();
+      const logs = (data.logs || []).slice(-20).reverse();
+      document.getElementById('logs-list').innerHTML = logs.length === 0
+        ? '<div style="color:var(--muted);font-size:0.8rem">Sin registros aún.</div>'
+        : logs.map(l => `
+            <div class="log-item">
+              <span class="log-time">${new Date(l.fecha).toLocaleString('es-AR', {dateStyle:'short',timeStyle:'short'})}</span>
+              <span class="log-action">${l.accion}</span>
+              <span class="log-detail">${l.detalle}</span>
+            </div>`).join('');
+    } catch (e) {
+      document.getElementById('logs-list').innerHTML = '<div style="color:var(--muted)">Error al cargar logs.</div>';
+    }
+  }
+
+  // ── TOAST ──────────────────────────────────────────────────────────────────
+  let toastTimer;
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast show ${type}`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // ── INIT ───────────────────────────────────────────────────────────────────
+  cargarEventos();
+</script>
+</body>
+</html>

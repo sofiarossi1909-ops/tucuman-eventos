@@ -1,0 +1,47 @@
+[
+  {
+    "fecha": "2026-05-06T19:06:51.691Z",
+    "accion": "AUTOMATIZACION_INICIO",
+    "detalle": "Inicio de carga desde Excel"
+  },
+  {
+    "fecha": "2026-05-06T19:06:51.705Z",
+    "accion": "AUTOMATIZACION_AGREGO",
+    "detalle": "Nuevo evento desde Excel: La Yapa Bar"
+  },
+  {
+    "fecha": "2026-05-06T19:06:51.705Z",
+    "accion": "AUTOMATIZACION_AGREGO",
+    "detalle": "Nuevo evento desde Excel: Café del Centro"
+  },
+  {
+    "fecha": "2026-05-06T19:06:51.706Z",
+    "accion": "DUPLICADO_DETECTADO",
+    "detalle": "\"El Español Bar\" similar a \"Bar El Español\" (score: 0.85)"
+  },
+  {
+    "fecha": "2026-05-06T19:06:51.706Z",
+    "accion": "AUTOMATIZACION_AGREGO",
+    "detalle": "Nuevo evento desde Excel: Pacha Tucumán"
+  },
+  {
+    "fecha": "2026-05-06T19:06:51.707Z",
+    "accion": "AUTOMATIZACION_AGREGO",
+    "detalle": "Nuevo evento desde Excel: Feria Artesanal del Parque"
+  },
+  {
+    "fecha": "2026-05-06T19:06:51.708Z",
+    "accion": "AUTOMATIZACION_FIN",
+    "detalle": "Fin: 4 agregados, 1 duplicados, 0 errores"
+  },
+  {
+    "fecha": "2026-05-06T21:15:43.643Z",
+    "accion": "CREAR",
+    "detalle": "Nuevo evento: Bar Prueba Sofia"
+  },
+  {
+    "fecha": "2026-05-06T22:10:51.516Z",
+    "accion": "EDITAR",
+    "detalle": "Evento editado: Bar El Español (id: 1)"
+  }
+]
