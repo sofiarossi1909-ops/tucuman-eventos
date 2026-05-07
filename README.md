@@ -83,6 +83,30 @@ Bonus Implementados
 
 [x] Detección Difusa: Manejo avanzado de inconsistencias en nombres.
 
+¿Cómo evitás duplicados?
+Se implementaron dos capas. Primero una comparación exacta por nombre (case-insensitive). Si pasa esa verificación, se aplica un algoritmo de similitud basado en bigramas de Jaccard: se normalizan los nombres (minúsculas, sin tildes, sin caracteres especiales), se calculan los bigramas de cada nombre y si la similitud supera el 70% se considera duplicado. Esto permite detectar casos como "Bar El Español" vs "El Español Bar" (85% de similitud).
+
+¿Cómo escalarías este sistema?
+
+Reemplazar el JSON por MongoDB o PostgreSQL para soportar escrituras concurrentes
+Agregar autenticación JWT para proteger las rutas de escritura
+Implementar colas con Redis + Bull para procesar la IA en background sin bloquear la API
+Usar node-cron para ejecutar la automatización periódicamente sin intervención manual
+Deploy en Railway o Render con CI/CD automático desde GitHub.
+
+¿Qué problemas puede tener este flujo?
+
+El JSON no soporta escrituras concurrentes — si dos procesos escriben a la vez puede haber pérdida de datos
+La API de Gemini tiene límites en el tier gratuito, lo que puede interrumpir la generación masiva de descripciones
+La detección difusa puede dar falsos positivos con nombres muy cortos o genéricos
+El Excel puede tener filas con formatos inconsistentes que el script no reconoce
+
+¿Cómo mejorarías la calidad de los datos?
+
+Normalizar direcciones usando la API de Google Maps Geocoding
+Validar categorías contra un listado fijo para evitar variaciones libres
+Agregar un sistema de aprobación manual antes de publicar registros nuevos
+Usar IA para detectar y corregir nombres inconsistentes antes de guardarlos
 
 Desarrollado por Sofía Rossi — Tucumán, Argentina.
 
