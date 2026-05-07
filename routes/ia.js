@@ -1,9 +1,7 @@
 // routes/ia.js
-// Usa Gemini para generar descripciones — cliente centralizado en lib/core/geminiClient
-
 const express = require("express");
 const router = express.Router();
-const { getGeminiModel } = require("../lib/core/geminiClient");
+const { getGroqClient, GROQ_MODEL } = require("../lib/core/geminiClient");
 const { leerEventos, guardarEventos, escribirLog } = require("../utils/db");
 const { strictLimiter } = require("../middleware/antiScraping");
 
@@ -23,15 +21,18 @@ No uses comillas ni asteriscos. Escribí solo el texto de la descripción.
 
 router.post("/describir/:id", strictLimiter, async (req, res) => {
   try {
-    const model = getGeminiModel();
+    const client = getGroqClient();
     const eventos = leerEventos();
     const index = eventos.findIndex((e) => e.id === req.params.id && e.activo);
 
     if (index === -1) return res.status(404).json({ error: "Evento no encontrado." });
 
-    const result = await model.generateContent(buildPrompt(eventos[index]));
-    const descripcion = result.response.text().trim();
+    const result = await client.chat.completions.create({
+      model: GROQ_MODEL,
+      messages: [{ role: "user", content: buildPrompt(eventos[index]) }],
+    });
 
+    const descripcion = result.choices[0].message.content.trim();
     eventos[index].descripcion = descripcion;
     guardarEventos(eventos);
     escribirLog("IA_DESCRIPCION", `Descripción generada para: ${eventos[index].nombre}`);
@@ -45,7 +46,7 @@ router.post("/describir/:id", strictLimiter, async (req, res) => {
 
 router.post("/describir-todos", strictLimiter, async (req, res) => {
   try {
-    const model = getGeminiModel();
+    const client = getGroqClient();
     const eventos = leerEventos();
     const sinDesc = eventos.filter((e) => e.activo && (!e.descripcion || e.descripcion === ""));
 
@@ -56,11 +57,14 @@ router.post("/describir-todos", strictLimiter, async (req, res) => {
     let actualizados = 0;
     for (const evento of sinDesc) {
       try {
-        const result = await model.generateContent(buildPrompt(evento));
+        const result = await client.chat.completions.create({
+          model: GROQ_MODEL,
+          messages: [{ role: "user", content: buildPrompt(evento) }],
+        });
         const idx = eventos.findIndex((e) => e.id === evento.id);
-        eventos[idx].descripcion = result.response.text().trim();
+        eventos[idx].descripcion = result.choices[0].message.content.trim();
         actualizados++;
-        await new Promise((r) => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, 500));
       } catch (innerErr) {
         console.error(`[IA ERROR] Fallo en ${evento.nombre}:`, innerErr.message);
       }

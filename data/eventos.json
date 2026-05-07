@@ -14,10 +14,10 @@
     "nombre": "Peña El Cardón",
     "ubicacion": "Av. Sarmiento 1120, San Miguel de Tucumán",
     "categoria": "peña",
-    "fuente": "mock",
+    "fuente": "manual",
     "fechaObtencion": "2025-05-06",
     "activo": true,
-    "descripcion": ""
+    "descripcion": "En el corazón de San Miguel de Tucumán, Peña El Cardón es un lugar emblemático donde la pasión por la música y la cultura se unen en un ambiente cálido y acogedor. Este tradicional espacio de peña folclórica te invita a sumergirte en la rica herencia musical de la región, con actuaciones en vivo y una energía contagiosa. La auténtica esencia tucumana se vive en cada nota y cada baile en Peña El Cardón."
   },
   {
     "id": "3",

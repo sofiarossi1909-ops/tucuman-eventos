@@ -9,13 +9,14 @@
     "automate": "node automation/cargarDesdeExcel.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
+    "groq-sdk": "^1.1.2",
     "uuid": "^9.0.0",
-    "xlsx": "^0.18.5",
-    "@google/generative-ai": "^0.21.0",
-    "dotenv": "^16.3.1",
-    "cors": "^2.8.5"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
