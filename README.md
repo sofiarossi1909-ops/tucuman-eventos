@@ -1,246 +1,87 @@
-#  Tucumán Eventos API
+# Tucumán Eventos API — Sistema Automatizado con IA
 
-Sistema automatizado para obtener, procesar y administrar bares y eventos de San Miguel de Tucumán.
-
----
-
-##  Stack utilizado
-
-- **Node.js + Express** — API REST
-- **JSON file** — Base de datos simulada (sin necesidad de instalar DB)
-- **xlsx** — Lectura de archivos Excel para automatización
-- **@google/generative-ai** — Integración con Gemini para generar descripciones
-- **express-rate-limit** — Protección anti-scraping
+Sistema integral desarrollado para la obtención, procesamiento y administración de establecimientos y eventos en San Miguel de Tucumán. Este proyecto integra automatización de datos mediante archivos externos, detección inteligente de duplicados y enriquecimiento de contenido a través de Inteligencia Artificial.
 
 ---
 
-##  Cómo instalar y correr
+## 🚀 Stack Tecnológico
 
-### 1. Clonar el repositorio
+- **Runtime:** Node.js + Express (API REST)
+- **Persistencia:** JSON File System (Base de datos simulada)
+- **Procesamiento de Datos:** Librería `xlsx` para ingesta de datasets.
+- **Inteligencia Artificial:** SDK `@google/generative-ai` (Gemini API).
+- **Seguridad:** `express-rate-limit` para mitigación de scraping.
 
+---
+
+## ⚙️ Instalación y Configuración
+
+### 1. Clonado del Proyecto
 ```bash
-git clone https://github.com/TU_USUARIO/tucuman-eventos.git
+git clone [https://github.com/sofiarossi1909-ops/tucuman-eventos.git](https://github.com/sofiarossi1909-ops/tucuman-eventos.git)
 cd tucuman-eventos
-```
 
-### 2. Instalar dependencias
-
-```bash
-npm install
-```
-
-### 3. Configurar variables de entorno
-
-Copiar el archivo de ejemplo y completar con tu API key de Gemini:
-
-```bash
-cp .env.example .env
-```
-
-Editar `.env`:
-```
-GEMINI_API_KEY=tu_api_key_de_gemini
+2. Gestión de DependenciasBashnpm install
+3. Variables de EntornoConfigurar un archivo .env en la raíz del proyecto basado en el archivo .env.example:Fragmento de códigoGEMINI_API_KEY=tu_api_key_aqui
 PORT=3000
-```
+Nota técnica: La integración utiliza el plan gratuito de Google AI Studio. En caso de experimentar errores 429 (Too Many Requests), el sistema incluye pausas controladas, pero se recomienda procesar los datos en lotes reducidos.
 
-> **Conseguir API key de Gemini (gratis):** https://aistudio.google.com/app/apikey
+Flujo de Automatización e IA
+El sistema cuenta con un flujo de trabajo diseñado para garantizar la integridad y calidad de la información:
 
-### 4. Iniciar la API
+Ingesta: Lectura de datos externos desde archivos Excel.
 
-```bash
-npm start
-# o para desarrollo con hot reload:
-npm run dev
-```
+Detección de Duplicados: Implementación de un algoritmo de similitud basado en Bigramas de Jaccard para identificar registros existentes aunque los nombres presenten ligeras variaciones.
 
-La API corre en: `http://localhost:3000`
+Enriquecimiento con IA: Generación automática de descripciones comerciales y clasificación de categorías.
 
----
+Auditoría: Registro detallado de cada operación en un sistema de logs persistente.
 
-##  Endpoints disponibles
+Arquitectura del Sistema
+📋 Endpoints Principales
+CRUD de Eventos
 
-### Health check
-```
-GET /
-```
+Método, Ruta, Descripción
+GET, /eventos, Lista todos los eventos activos
+POST, /eventos, Crea un nuevo evento manualmente
+PUT, /eventos/:id ,Edita un evento existente
+DELETE, /eventos/:id, Desactiva (soft delete) un registro
 
-### CRUD de Eventos
+Servicios de IA
 
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/eventos` | Lista todos los eventos activos |
-| GET | `/eventos?categoria=bar` | Filtra por categoría |
-| GET | `/eventos?nombre=cafe` | Busca por nombre |
-| GET | `/eventos/:id` | Obtiene un evento por ID |
-| POST | `/eventos` | Crea un nuevo evento |
-| PUT | `/eventos/:id` | Edita un evento existente |
-| DELETE | `/eventos/:id` | Desactiva (soft delete) un evento |
-| GET | `/eventos/logs/historial` | Ver historial de acciones |
+Método, Ruta, Descripción
+POST, /ia/describir/:id, Genera descripción para un evento específico
+POST, /ia/describir-todos, Procesa todos los registros pendientes
 
-### IA con Gemini
+Protección Anti-Scraping
+La API implementa capas de seguridad para garantizar un uso responsable de los recursos:
 
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| POST | `/ia/describir/:id` | Genera descripción para un evento |
-| POST | `/ia/describir-todos` | Genera descripción para todos los que no tienen |
+Rate Limiting: Restricción de peticiones por IP (máx. 100 cada 15 min).
 
----
+Validación de User-Agent: Rechazo automático de peticiones sin cabeceras válidas.
 
-##  Ejemplos de uso
+Bloqueo de Bots: Identificación y bloqueo de herramientas de scraping automatizado.
 
-### Crear un evento
-```bash
-curl -X POST http://localhost:3000/eventos \
-  -H "Content-Type: application/json" \
-  -H "User-Agent: MiApp/1.0" \
-  -d '{
-    "nombre": "Bar La Esquina",
-    "ubicacion": "Córdoba 450, Tucumán",
-    "categoria": "bar",
-    "fuente": "manual"
-  }'
-```
+Criterio Técnico y Escalabilidad
 
-### Generar descripción con IA
-```bash
-curl -X POST http://localhost:3000/ia/describir/1 \
-  -H "User-Agent: MiApp/1.0"
-```
+Detección Inteligente
+Se utiliza normalización de cadenas y análisis de similitud para detectar que registros como "Bar El Español" y "El Español Bar" son duplicados, evitando la redundancia de datos.
 
-### Generar descripciones para todos
-```bash
-curl -X POST http://localhost:3000/ia/describir-todos \
-  -H "User-Agent: MiApp/1.0"
-```
+Mejoras Futuras
+Persistencia: Migración hacia MongoDB o PostgreSQL para soportar concurrencia.
 
----
+Validación: Integración con la API de Google Maps para normalización de direcciones.
 
-##  Automatización (carga desde Excel)
+Asincronismo: Implementación de colas (Redis) para el procesamiento masivo con IA.
 
-### Paso 1: Generar el Excel de ejemplo
-```bash
-node scripts/generarExcelEjemplo.js
-```
+Bonus Implementados
+[x] Dashboard: Interfaz básica en HTML para visualización de datos.
 
-Esto crea `automation/nuevos_eventos.xlsx` con datos de prueba.
+[x] Historial de cambios: Logs de auditoría accesibles vía API.
 
-### Paso 2: Ejecutar la automatización
-```bash
-npm run automate
-# equivalente a: node automation/cargarDesdeExcel.js
-```
+[x] Soft Delete: Sistema de desactivación de registros sin pérdida de datos.
 
-El script:
-1. Lee el Excel `automation/nuevos_eventos.xlsx`
-2. Compara cada fila con los eventos existentes
-3. **Detecta duplicados** (exactos y difusos)
-4. Agrega solo los nuevos
-5. Registra todo en `data/logs.json`
-
-### Formato del Excel
-
-El Excel debe tener estas columnas (primera fila = encabezados):
-
-| nombre | ubicacion | categoria | fuente |
-|--------|-----------|-----------|--------|
-| Bar La Yapa | Córdoba 450 | bar | excel |
-
----
-
-##  Protección Anti-Scraping
-
-La API implementa varias capas de protección:
-
-| Mecanismo | Descripción |
-|-----------|-------------|
-| **Rate Limiting** | Máx 100 peticiones por IP cada 15 min (escritura: 20) |
-| **User-Agent obligatorio** | Rechaza peticiones sin User-Agent |
-| **Bloqueo de bots** | Bloquea `python-requests`, `curl`, `wget`, `scrapy`, etc. |
-| **Manejo de errores global** | Errores controlados con mensajes claros |
-
----
-
-##  Criterio Técnico
-
-### ¿Cómo se evitan duplicados?
-
-Se usa un algoritmo de similitud basado en **bigramas de Jaccard**:
-- Se normalizan los nombres (minúsculas, sin tildes, sin caracteres especiales)
-- Se calculan los bigramas de cada nombre
-- Si la similitud supera el **70%** → se considera duplicado
-
-Esto permite detectar casos como:
-- `"Bar El Español"` vs `"El Español Bar"` → duplicado ✅
-- `"O'Brien Irish Bar"` vs `"Bar Irlandés O'Brien"` → duplicado ✅
-
-### ¿Cómo escalarías este sistema?
-
-1. Reemplazar el JSON por **MongoDB o PostgreSQL**
-2. Agregar un sistema de colas (**Bull + Redis**) para la automatización
-3. Autenticación con **JWT** para proteger las rutas de escritura
-4. Deploy en **Railway, Render o Vercel** con CI/CD automático
-5. Scheduler con **node-cron** para ejecutar la automatización periódicamente
-
-### ¿Qué problemas puede tener este flujo?
-
-- El JSON no soporta escrituras concurrentes (si dos procesos escriben a la vez, puede haber pérdida de datos)
-- La detección difusa puede dar falsos positivos con nombres muy cortos
-- La API de Gemini puede fallar o tener rate limits propios
-- El Excel puede tener filas con formatos inconsistentes
-
-### ¿Cómo mejorarías la calidad de los datos?
-
-- Normalizar direcciones usando la **API de Google Maps Geocoding**
-- Validar categorías contra un listado fijo (enum)
-- Agregar un sistema de aprobación manual antes de publicar
-- Implementar un pipeline de limpieza con IA para nombres inconsistentes
-
----
-
-##  Estructura del proyecto
-
-```
-tucuman-eventos/
-├── index.js                    # Servidor Express principal
-├── package.json
-├── .env.example                # Template de variables de entorno
-├── .gitignore
-│
-├── data/
-│   ├── eventos.json            # Base de datos (JSON)
-│   └── logs.json               # Historial de acciones
-│
-├── routes/
-│   ├── eventos.js              # CRUD de eventos
-│   └── ia.js                   # Rutas de IA (Gemini)
-│
-├── middleware/
-│   └── antiScraping.js         # Rate limiting y protección
-│
-├── utils/
-│   └── db.js                   # Helpers para leer/escribir JSON
-│
-├── automation/
-│   ├── cargarDesdeExcel.js     # Script de automatización
-│   └── nuevos_eventos.xlsx     # Excel de ejemplo (generado)
-│
-└── scripts/
-    └── generarExcelEjemplo.js  # Genera el Excel de prueba
-```
-
----
-
-##  Categorías disponibles
-
-`bar` | `boliche` | `cafe` | `peña` | `restaurante` | `recital` | `evento`
-
----
-
-## Licencia
-
-MIT
+[x] Detección Difusa: Manejo avanzado de inconsistencias en nombres.
 
 
-![Diagrama de Flujo del Sistema](./docs/image.png)
-
-
+Desarrollado por Sofía Rossi — Tucumán, Argentina.
