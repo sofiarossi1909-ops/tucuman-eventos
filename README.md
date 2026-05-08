@@ -9,7 +9,7 @@ Sistema integral para la obtención, procesamiento y administración de establec
 - **Runtime:** Node.js + Express (API REST)
 - **Persistencia:** JSON File System (base de datos simulada)
 - **Procesamiento de datos:** Librería `xlsx` para ingesta de datasets
-- **Inteligencia Artificial:** SDK `@google/generative-ai` (Gemini API)
+- **Inteligencia Artificial:** SDK `groq-sdk` (Groq API — llama-3.3-70b-versatile)
 - **Seguridad:** `express-rate-limit` para mitigación de scraping
 
 ---
@@ -38,11 +38,9 @@ cp .env.example .env
 ```
 
 ```env
-GEMINI_API_KEY=tu_api_key_aqui
+GROQ_API_KEY=tu_api_key_aqui
 PORT=3000
 ```
-
-> **Nota:** La integración utiliza el plan gratuito de Google AI Studio. En caso de errores 429 (Too Many Requests), el sistema incluye pausas controladas entre llamadas.
 
 ### 4. Iniciar el servidor
 
